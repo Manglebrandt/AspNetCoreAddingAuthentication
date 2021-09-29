@@ -37,9 +37,9 @@ namespace WishList.Controllers
         public IActionResult Create(Item item)
         {
 	        var signedInUser = _userManager.GetUserAsync(HttpContext.User).Result;
-
-	        _context.Items.Add(signedInUser.Items.FirstOrDefault());
-            //_context.Items.Add(item);
+	        item.User = signedInUser;
+	        
+            _context.Items.Add(item);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
