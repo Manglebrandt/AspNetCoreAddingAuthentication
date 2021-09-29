@@ -31,19 +31,22 @@ namespace WishList.Controllers
 				return View("Register", viewModel);
 			}
 
-			var newUser = new ApplicationUser() { UserName = viewModel.Email, Email = viewModel.Email };
-			var createUser = _userManager.CreateAsync(newUser, "temporaryPassword");
 
-			if (createUser.Result.Succeeded)
+			var result = _userManager
+				.CreateAsync(new ApplicationUser() { Email = viewModel.Email, UserName = viewModel.Email },
+					viewModel.Password).Result;
+
+			if (!result.Succeeded)
 			{
-				return RedirectToAction("Index", "Home");
+				foreach (var error in result.Errors)
+				{
+					ModelState.AddModelError("Password", error.Description);
+				}
+
+				return View(viewModel);
 			}
 
-			foreach (var error in createUser.Result.Errors)
-			{
-				ModelState.AddModelError("Password", error.Description);
-			}
-			return View(viewModel);
+			return RedirectToAction("Index", "Home");
 		}
 	}
 }
