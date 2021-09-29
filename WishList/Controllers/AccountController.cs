@@ -16,5 +16,22 @@ namespace WishList.Controllers
 			_userManager = userManager;
 			_signInManager = signInManager;
 		}
+
+		[HttpGet, AllowAnonymous]
+		public IActionResult Register()
+		{
+			return View("Register");
+		}
+
+		[HttpPost, AllowAnonymous]
+		public IActionResult Register(Models.AccountViewModels.RegisterViewModel viewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View("Register", viewModel);
+			}
+
+			return RedirectToAction("Index", "Home");
+		}
 	}
 }
